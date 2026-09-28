@@ -11,5 +11,5 @@ get_response = requests.get(endpoint,) # HTTP Request
 # HTTP Request -> HTML
 # REST API HTTP Request -> JSON
 # JavaScript Object Nototion ~ Python Dict
-print(get_response.json()['price']) # print JSON response
+print(get_response.json()) # print JSON response
 # print(get_response.status_code)

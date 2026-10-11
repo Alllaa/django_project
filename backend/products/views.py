@@ -1,4 +1,4 @@
-from rest_framework import generics, mixins
+from rest_framework import authentication, generics, mixins, permissions
 from rest_framework.decorators import api_view
 
 from rest_framework.response import Response 
@@ -11,15 +11,16 @@ from .serializers import ProductSerializer
 class ProductListCreateAPIView(generics.ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    permission_classes = [permissions.DjangoModelPermissions]
     def perform_create(self, serializer):
         # serializer.save(user=self.request.user)
         print(serializer)
-        title = serializer.validated_data_get('title')
-        content = serializer.validated_data_get('content') or None
+        title = serializer.validated_data.get('title')
+        content = serializer.validated_data.get('content') or None
         if content is None:
             content = title
         serializer.save(content = content)
-
+authentications_classes = [authentication.SessionAuthentication]
 product_list_create_view = ProductListCreateAPIView.as_view()    
 
 
@@ -96,8 +97,8 @@ def product_alt_view(request,pk=None, *args,**kwargs):
     if method == "POST":
         serializer = ProductSerializer(data = request.data)
         if serializer.is_valid(raise_exception = True):
-            title = serializer.validated_data_get('title')
-            content = serializer.validated_data_get('content') or None
+            title = serializer.validated_data.get('title')
+            content = serializer.validated_data.get('content') or None
             if content is None:
                 content = title
             serializer.save(content = content)
